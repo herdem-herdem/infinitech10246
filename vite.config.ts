@@ -12,4 +12,11 @@ export default defineConfig({
   tanstackStart: {
     server: { entry: "server" },
   },
+  vite: {
+    // Cloudflare Pages/Workers runtime does not support Node-style bare-specifier SSR externals.
+    // Ensure key SSR deps are bundled into dist/server assets.
+    ssr: {
+      noExternal: ["h3-v2"],
+    },
+  },
 });

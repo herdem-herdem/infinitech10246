@@ -20,15 +20,21 @@ async function pathExists(p) {
   }
 }
 
-async function copyDirFiltered({ fromDir, toDir, filter }) {
+async function copyDirRecursive({ fromDir, toDir }) {
   if (!(await pathExists(fromDir))) return;
   await mkdir(toDir, { recursive: true });
 
   const entries = await readdir(fromDir, { withFileTypes: true });
   for (const entry of entries) {
-    if (!entry.isFile()) continue;
-    if (!filter(entry.name)) continue;
-    await copyFile(path.join(fromDir, entry.name), path.join(toDir, entry.name));
+    const from = path.join(fromDir, entry.name);
+    const to = path.join(toDir, entry.name);
+    if (entry.isDirectory()) {
+      await copyDirRecursive({ fromDir: from, toDir: to });
+      continue;
+    }
+    if (entry.isFile()) {
+      await copyFile(from, to);
+    }
   }
 }
 
@@ -79,11 +85,11 @@ async function main() {
     path.join(pagesWorkerDir, "index.js"),
   );
 
-  // Copy only JS modules + source maps needed by the Worker runtime.
-  await copyDirFiltered({
+  // Copy the entire SSR asset graph.
+  // Some builds can emit extensionless modules (e.g. "h3-v2") or nested folders.
+  await copyDirRecursive({
     fromDir: path.join(serverDir, "assets"),
     toDir: pagesWorkerAssetsDir,
-    filter: (name) => /\.(?:js|mjs|cjs|map)$/i.test(name),
   });
 }
 
