@@ -79,7 +79,21 @@ export default {
     try {
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
-      return await normalizeCatastrophicSsrResponse(response);
+      const normalized = await normalizeCatastrophicSsrResponse(response);
+      
+      // Add no-cache headers to HTML responses so browsers always get fresh asset hashes
+      const contentType = normalized.headers.get("content-type") ?? "";
+      if (contentType.includes("text/html")) {
+        const newHeaders = new Headers(normalized.headers);
+        newHeaders.set("Cache-Control", "no-cache, no-store, must-revalidate");
+        newHeaders.set("Pragma", "no-cache");
+        return new Response(normalized.body, {
+          status: normalized.status,
+          headers: newHeaders,
+        });
+      }
+      
+      return normalized;
     } catch (error) {
       console.error(error);
       return new Response(`SSR CRASH: ${error instanceof Error ? error.stack : String(error)}`, {
