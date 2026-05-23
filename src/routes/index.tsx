@@ -59,7 +59,7 @@ const LANGS: { code: "en" | "tr"; label: string; flag: string }[] = [
 
 /* ---------------- SERVER ACTIONS ---------------- */
 export const sendContactEmail = createServerFn({ method: "POST" })
-  .validator((data: { name: string; email: string; message: string }) => data)
+  .inputValidator((data: { name: string; email: string; message: string }) => data)
   .handler(async ({ data }) => {
     const { name, email, message } = data;
     

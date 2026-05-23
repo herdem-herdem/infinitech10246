@@ -8,13 +8,6 @@ if (typeof global === 'undefined') {
   (globalThis as any).global = globalThis;
 }
 
-let lastConsoleError: any;
-const originalConsoleError = console.error;
-console.error = (...args) => {
-  lastConsoleError = args[0];
-  originalConsoleError(...args);
-};
-
 import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";
 
@@ -77,12 +70,8 @@ async function normalizeCatastrophicSsrResponse(response: Response): Promise<Res
     return response;
   }
 
-  const captured = lastConsoleError ?? consumeLastCapturedError() ?? new Error(`h3 swallowed SSR error: ${body}`);
-  console.error(captured);
-  return new Response(`SSR CRASH CATASTROPHIC:\n\n${captured instanceof Error ? captured.stack : String(captured)}\n\nBody: ${body}`, {
-    status: 500,
-    headers: { "content-type": "text/plain; charset=utf-8" },
-  });
+  console.error(consumeLastCapturedError() ?? new Error(`h3 swallowed SSR error: ${body}`));
+  return brandedErrorResponse();
 }
 
 export default {
