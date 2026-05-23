@@ -74,7 +74,10 @@ export default {
       return await normalizeCatastrophicSsrResponse(response);
     } catch (error) {
       console.error(error);
-      return brandedErrorResponse();
+      return new Response(`SSR CRASH: ${error instanceof Error ? error.stack : String(error)}`, {
+        status: 500,
+        headers: { "content-type": "text/plain; charset=utf-8" },
+      });
     }
   },
 };
