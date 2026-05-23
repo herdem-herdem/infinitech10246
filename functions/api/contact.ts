@@ -19,7 +19,7 @@ export const onRequestPost: PagesFunction = async (context) => {
     const emailPayload = {
       personalizations: [
         {
-          to: [{ email: "10246.infinitech@gmail.com", name: "Infinitech Team" }],
+          to: [{ email: "herdem09@proton.me", name: "Infinitech Support" }],
           reply_to: { email, name },
         },
       ],
