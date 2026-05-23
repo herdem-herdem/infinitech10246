@@ -1,4 +1,4 @@
 name = "tanstack-start-app"
-compatibility_date = "2025-09-24"
+compatibility_date = "2026-05-23"
 compatibility_flags = ["nodejs_compat"]
 pages_build_output_dir = "dist/client"

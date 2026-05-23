@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
-    "build:pages": "vite build && rimraf dist/client/wrangler.json dist/server/wrangler.json",
+    "build:pages": "vite build && node scripts/prepare-pages.mjs",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
     "lint": "eslint .",

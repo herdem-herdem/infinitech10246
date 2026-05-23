@@ -74,9 +74,35 @@ async function normalizeCatastrophicSsrResponse(response: Response): Promise<Res
   return brandedErrorResponse();
 }
 
+function looksLikeStaticAssetPath(pathname: string): boolean {
+  if (pathname.startsWith("/assets/")) return true;
+
+  // Common "public root" files.
+  if (pathname === "/favicon.ico") return true;
+  if (pathname === "/robots.txt") return true;
+  if (pathname === "/sitemap.xml") return true;
+  return false;
+}
+
+async function maybeServePagesAsset(request: Request, env: unknown): Promise<Response | null> {
+  const assetsFetcher = (env as any)?.ASSETS;
+  if (!assetsFetcher || typeof assetsFetcher.fetch !== "function") return null;
+
+  const { pathname } = new URL(request.url);
+  if (!looksLikeStaticAssetPath(pathname)) return null;
+
+  // In Pages Functions "advanced mode", the Function must forward requests to static assets,
+  // otherwise no assets will be served.
+  // See: https://developers.cloudflare.com/pages/functions/advanced-mode/
+  return await assetsFetcher.fetch(request);
+}
+
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
+      const assetResponse = await maybeServePagesAsset(request, env);
+      if (assetResponse) return assetResponse;
+
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
       const normalized = await normalizeCatastrophicSsrResponse(response);
