@@ -13,10 +13,10 @@ export default defineConfig({
     server: { entry: "server" },
   },
   vite: {
-    // Cloudflare Pages/Workers runtime does not support Node-style bare-specifier SSR externals.
-    // Ensure key SSR deps are bundled into dist/server assets.
+    // Cloudflare Pages/Workers runtime does not ship a node_modules resolver for SSR.
+    // Bundle SSR deps so the worker only loads relative chunks from `_worker.js/assets`.
     ssr: {
-      noExternal: ["h3-v2"],
+      noExternal: true,
     },
   },
 });
