@@ -1076,9 +1076,16 @@ function Contact() {
                     form.reset();
                     setTimeout(() => setSent(false), 4000);
                   } else {
-                    setError(
-                      `Mesaj gönderilemedi (HTTP ${res.status}). Sunucu endpoint'i bulunamadıysa Cloudflare Pages Functions deploy edilmemiş olabilir.`,
-                    );
+                    const detail = (res.details || "").toString().trim();
+                    if (res.status === 404) {
+                      setError(
+                        "Mesaj gönderilemedi (HTTP 404). `/api/contact` bulunamadı: Pages Functions/worker deploy edilmemiş veya `_worker.js` algılanmıyor.",
+                      );
+                    } else {
+                      setError(
+                        `Mesaj gönderilemedi (HTTP ${res.status}). ${detail ? `Detay: ${detail}` : ""}`.trim(),
+                      );
+                    }
                   }
                 } catch {
                   setError("Bir hata oluştu. Lütfen tekrar deneyin.");
