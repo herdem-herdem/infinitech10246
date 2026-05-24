@@ -143,22 +143,11 @@ async function maybeHandleContactApi(request: Request, env: unknown): Promise<Re
   }
 
   const emailPayload = {
-    personalizations: [
-      {
-        to: [{ email: "herdem09@proton.me", name: "Infinitech Support" }],
-        reply_to: { email, name },
-      },
-    ],
-    from: {
-      // Prefer a real domain sender for deliverability; must match provider requirements.
-      email: "noreply@infinitech10246.com",
-      name: "Infinitech Website",
-    },
+    from: "Infinitech Website <noreply@infinitech10246.com>",
+    to: "herdem09@proton.me",
+    reply_to: `${name} <${email}>`,
     subject: `Yeni İletişim Mesajı - ${name}`,
-    content: [
-      {
-        type: "text/html",
-        value: `
+    html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #0d0d0d; color: #ffffff; padding: 32px; border-radius: 12px;">
             <div style="text-align: center; margin-bottom: 24px;">
               <h1 style="color: #f5a524; font-size: 28px; margin: 0; letter-spacing: 0.2em;">INFINITECH</h1>
@@ -184,26 +173,25 @@ async function maybeHandleContactApi(request: Request, env: unknown): Promise<Re
             <p style="color: #555; font-size: 11px; text-align: center; margin-top: 16px;">Bu e-posta otomatik olarak gönderilmiştir.</p>
           </div>
         `,
-      },
-    ],
   };
 
-  const response = await fetch("https://api.mailchannels.net/tx/v1/send", {
+  const apiKey = (env as any)?.RESEND_API_KEY;
+  if (typeof apiKey !== "string" || !apiKey.trim()) {
+    return jsonResponse({ ok: false, error: "missing_resend_api_key" }, { status: 500 });
+  }
+
+  const response = await fetch("https://api.resend.com/emails", {
     method: "POST",
-    headers: (() => {
-      const headers: Record<string, string> = { "Content-Type": "application/json" };
-      const apiKey = (env as any)?.MAILCHANNELS_API_KEY;
-      if (typeof apiKey === "string" && apiKey.trim()) {
-        headers["X-Api-Key"] = apiKey.trim();
-      }
-      return headers;
-    })(),
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${apiKey.trim()}`,
+    },
     body: JSON.stringify(emailPayload),
   });
 
-  if (response.status !== 202) {
+  if (!response.ok) {
     const details = await response.text().catch(() => "");
-    return jsonResponse({ ok: false, error: "mailchannels_error", details }, { status: 502 });
+    return jsonResponse({ ok: false, error: "resend_error", details }, { status: 502 });
   }
 
   return jsonResponse({ ok: true }, { status: 200 });
