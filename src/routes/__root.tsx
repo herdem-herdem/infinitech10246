@@ -9,6 +9,7 @@ import {
 } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
+import logo from "@/assets/logo.png";
 import { LanguageProvider } from "@/components/LanguageContext";
 
 function NotFoundComponent() {
@@ -108,6 +109,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         rel: "canonical",
         href: "https://infinitech10246.com/",
+      },
+      {
+        rel: "icon",
+        href: logo,
+        type: "image/png",
+      },
+      {
+        rel: "apple-touch-icon",
+        href: logo,
       },
       {
         rel: "stylesheet",

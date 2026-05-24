@@ -1333,7 +1333,9 @@ function Footer() {
     <footer className="bg-black border-t-4 border-orange-500 py-8 px-6">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <img src={logo} alt="" className="h-12 w-12" />
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/5">
+            <img src={logo} alt="Infinitech logo" className="h-10 w-10 object-contain" />
+          </div>
           <div>
             <div className="font-black text-orange-400 tracking-wider">INFINITECH · 10246</div>
             <div className="text-xs text-white/40">{t("footer.team")}</div>
