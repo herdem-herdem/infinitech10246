@@ -146,7 +146,7 @@ async function maybeHandleContactApi(request: Request, env: unknown): Promise<Re
 
   const emailPayload = {
     from: "Infinitech Website <noreply@infinitech10246.com>",
-    to: "herdem09@proton.me",
+    to: "10246.infinitech@gmail.com",
     reply_to: `${name} <${email}>`,
     subject: `Yeni İletişim Mesajı - ${name}`,
     html: `
