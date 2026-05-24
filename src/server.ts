@@ -15,6 +15,12 @@ type ServerEntry = {
   fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
 };
 
+type ContactPayload = {
+  name: string;
+  email: string;
+  message: string;
+};
+
 let serverEntryPromise: Promise<ServerEntry> | undefined;
 
 async function getServerEntry(): Promise<ServerEntry> {
@@ -97,11 +103,105 @@ async function maybeServePagesAsset(request: Request, env: unknown): Promise<Res
   return await assetsFetcher.fetch(request);
 }
 
+function jsonResponse(body: unknown, init?: ResponseInit) {
+  const headers = new Headers(init?.headers);
+  headers.set("content-type", "application/json; charset=utf-8");
+  return new Response(JSON.stringify(body), { ...init, headers });
+}
+
+async function maybeHandleContactApi(request: Request): Promise<Response | null> {
+  const { pathname } = new URL(request.url);
+  if (pathname !== "/api/contact") return null;
+
+  if (request.method === "OPTIONS") {
+    return new Response(null, { status: 204 });
+  }
+
+  if (request.method !== "POST") {
+    return jsonResponse({ ok: false, error: "method_not_allowed" }, { status: 405 });
+  }
+
+  const contentType = request.headers.get("content-type") || "";
+  if (!contentType.toLowerCase().includes("application/json")) {
+    return jsonResponse({ ok: false, error: "invalid_content_type" }, { status: 415 });
+  }
+
+  const data = (await request.json().catch(() => null)) as Partial<ContactPayload> | null;
+  const name = (data?.name || "").toString().trim();
+  const email = (data?.email || "").toString().trim();
+  const message = (data?.message || "").toString().trim();
+
+  if (!name || !email || !message) {
+    return jsonResponse({ ok: false, error: "missing_fields" }, { status: 400 });
+  }
+
+  const emailPayload = {
+    personalizations: [
+      {
+        to: [{ email: "herdem09@proton.me", name: "Infinitech Support" }],
+        reply_to: { email, name },
+      },
+    ],
+    from: {
+      email: "noreply@infinitech-hub.pages.dev",
+      name: "Infinitech Website",
+    },
+    subject: `Yeni İletişim Mesajı - ${name}`,
+    content: [
+      {
+        type: "text/html",
+        value: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #0d0d0d; color: #ffffff; padding: 32px; border-radius: 12px;">
+            <div style="text-align: center; margin-bottom: 24px;">
+              <h1 style="color: #f5a524; font-size: 28px; margin: 0; letter-spacing: 0.2em;">INFINITECH</h1>
+              <p style="color: #888; font-size: 12px; margin-top: 4px; letter-spacing: 0.3em;">TEAM #10246 &middot; YENİ MESAJ</p>
+            </div>
+            <hr style="border-color: #f5a52433; margin-bottom: 24px;" />
+            <table style="width: 100%; border-collapse: collapse;">
+              <tr>
+                <td style="padding: 8px 0; color: #f5a524; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; width: 80px;">İsim</td>
+                <td style="padding: 8px 0; color: #ffffff; font-weight: bold;">${name}</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px 0; color: #f5a524; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;">E-posta</td>
+                <td style="padding: 8px 0; color: #ffffff;"><a href="mailto:${email}" style="color: #f5a524;">${email}</a></td>
+              </tr>
+            </table>
+            <hr style="border-color: #f5a52433; margin: 20px 0;" />
+            <div>
+              <p style="color: #f5a524; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 10px;">Mesaj</p>
+              <p style="color: #cccccc; line-height: 1.7; white-space: pre-wrap;">${message}</p>
+            </div>
+            <hr style="border-color: #f5a52433; margin-top: 24px;" />
+            <p style="color: #555; font-size: 11px; text-align: center; margin-top: 16px;">Bu e-posta otomatik olarak gönderilmiştir.</p>
+          </div>
+        `,
+      },
+    ],
+  };
+
+  const response = await fetch("https://api.mailchannels.net/tx/v1/send", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(emailPayload),
+  });
+
+  if (response.status !== 202) {
+    const details = await response.text().catch(() => "");
+    return jsonResponse({ ok: false, error: "mailchannels_error", details }, { status: 502 });
+  }
+
+  return jsonResponse({ ok: true }, { status: 200 });
+}
+
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
       const assetResponse = await maybeServePagesAsset(request, env);
       if (assetResponse) return assetResponse;
+
+      const contactApiResponse = await maybeHandleContactApi(request);
+      if (contactApiResponse) return contactApiResponse;
 
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
