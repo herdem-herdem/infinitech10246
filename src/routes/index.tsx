@@ -63,7 +63,24 @@ async function sendContactEmail(data: { name: string; email: string; message: st
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   });
-  return { ok: res.ok };
+
+  if (res.ok) return { ok: true as const };
+
+  const details = await (async () => {
+    try {
+      const body = await res.json();
+      if (body && typeof body === "object") return JSON.stringify(body);
+    } catch {
+      // ignore
+    }
+    try {
+      return await res.text();
+    } catch {
+      return "";
+    }
+  })();
+
+  return { ok: false as const, status: res.status, details };
 }
 
 /* ---------------- HEX BG ---------------- */
@@ -1058,6 +1075,10 @@ function Contact() {
                     setSent(true);
                     form.reset();
                     setTimeout(() => setSent(false), 4000);
+                  } else {
+                    setError(
+                      `Mesaj gönderilemedi (HTTP ${res.status}). Sunucu endpoint'i bulunamadıysa Cloudflare Pages Functions deploy edilmemiş olabilir.`,
+                    );
                   }
                 } catch {
                   setError("Bir hata oluştu. Lütfen tekrar deneyin.");
