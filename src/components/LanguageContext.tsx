@@ -1,140 +1,148 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from "react";
 
-export type Lang = "en" | "tr";
+export type Lang = "en" | "de" | "tr";
 
-type Entry = { en: string; tr: string };
-const D = (en: string, _es: string, tr: string): Entry => ({ en, tr });
+type Entry = { en: string; de: string; tr: string };
+const D = (en: string, de: string, tr: string): Entry => ({ en, de, tr });
 
 const dict: Record<string, Entry> = {
   // nav
-  about: D("About Us", "Nosotros", "Hakkımızda"),
-  awards: D("Our Awards", "Premios", "Ödüllerimiz"),
-  projects: D("Our Projects", "Proyectos", "Projelerimiz"),
-  robots: D("Our Robots", "Nuestros Robots", "Robotlarımız"),
-  contact: D("Contact", "Contacto", "İletişim"),
-  "nav.join": D("Join", "Únete", "Katıl"),
+  about: D("About Us", "Über uns", "Hakkımızda"),
+  awards: D("Our Awards", "Unsere Auszeichnungen", "Ödüllerimiz"),
+  projects: D("Our Projects", "Unsere Projekte", "Projelerimiz"),
+  robots: D("Our Robots", "Unsere Roboter", "Robotlarımız"),
+  contact: D("Contact", "Kontakt", "İletişim"),
+  "nav.join": D("Join", "Mitmachen", "Katıl"),
 
   // hero
   "hero.subtitle": D(
     "Tech with no limits, team with no boundaries.",
-    "Tech with no limits, team with no boundaries.",
-    "Sınırsız teknoloji, sınır tanımayan takım."
+    "Technik ohne Grenzen, ein Team ohne Barrieren.",
+    "Sınırsız teknoloji, sınır tanımayan takım.",
   ),
-  "hero.cta1": D("Meet Us", "Conócenos", "Bizi Tanıyın"),
-  "hero.cta2": D("Contact", "Contacto", "İletişim"),
+  "hero.cta1": D("Meet Us", "Lern uns kennen", "Bizi Tanıyın"),
+  "hero.cta2": D("Contact", "Kontakt", "İletişim"),
 
   // about
-  "about.who": D("Who We Are", "Quiénes Somos", "Biz Kimiz"),
-  "about.h1": D("FROM ALL", "DESDE TODO", "TÜM"),
-  "about.h2": D("OVER THE", "EL", "DÜNYAYA"),
-  "about.h3": D("WORLD", "MUNDO", "ULAŞIYORUZ"),
-  "about.body1.pre": D("is robotics team number", "es el equipo de robótica número", "robotik takım numarası"),
+  "about.who": D("Who We Are", "Wer wir sind", "Biz Kimiz"),
+  "about.h1": D("FROM ALL", "AUS DER GANZEN", "TÜM"),
+  "about.h2": D("OVER THE", "WELT", "DÜNYAYA"),
+  "about.h3": D("WORLD", "HINAUS", "ULAŞIYORUZ"),
+  "about.body1.pre": D(
+    "is robotics team number",
+    "ist das Robotik-Team mit der Nummer",
+    "robotik takım numarası",
+  ),
   "about.body1.post": D(
     ", founded in 2024 by students of Istanbul Technical University Vocational and Technical Anatolian High School for the FRC competition.",
-    ", fundado en 2024 por estudiantes de la Escuela Secundaria Técnica de la Universidad Técnica de Estambul para la competición FRC.",
-    " olan ve 2024'te İstanbul Teknik Üniversitesi Mesleki ve Teknik Anadolu Lisesi öğrencileri tarafından FRC yarışması için kurulan bir robotik takımıdır."
+    ", gegründet 2024 von Schüler:innen der Beruflichen und Technischen Anatolischen Oberschule der Istanbul Technischen Universität für den FRC-Wettbewerb.",
+    " olan ve 2024'te İstanbul Teknik Üniversitesi Mesleki ve Teknik Anadolu Lisesi öğrencileri tarafından FRC yarışması için kurulan bir robotik takımıdır.",
   ),
   "about.body2": D(
     "Our vision is to spread FRC, STEM, and positive sciences — inspiring everyone we reach. Although new, we move fast and share what we learn with the world.",
-    "Nuestra visión es difundir FRC, STEM y las ciencias positivas — inspirando a todos los que alcanzamos. Aunque somos nuevos, avanzamos rápido y compartimos lo que aprendemos con el mundo.",
-    "Vizyonumuz FRC, STEM ve pozitif bilimleri yaymak — ulaştığımız herkese ilham vermek. Yeni olsak da hızlı ilerliyor ve öğrendiklerimizi dünyayla paylaşıyoruz."
+    "Unsere Vision ist es, FRC, MINT und die positiven Wissenschaften zu verbreiten – und alle zu inspirieren, die wir erreichen. Obwohl wir neu sind, bewegen wir uns schnell und teilen unser Wissen mit der Welt.",
+    "Vizyonumuz FRC, STEM ve pozitif bilimleri yaymak — ulaştığımız herkese ilham vermek. Yeni olsak da hızlı ilerliyor ve öğrendiklerimizi dünyayla paylaşıyoruz.",
   ),
-  "about.location": D("Location", "Ubicación", "Konum"),
-  "about.locationVal": D("Istanbul · TR", "Estambul · TR", "İstanbul · TR"),
-  "about.competition": D("Competition", "Competición", "Yarışma"),
-  "about.scroll": D("Scroll", "Desplaza", "Kaydır"),
-  "about.scrollVal": D("↓ Read more", "↓ Leer más", "↓ Devamını Oku"),
+  "about.location": D("Location", "Standort", "Konum"),
+  "about.locationVal": D("Istanbul · TR", "Istanbul · TR", "İstanbul · TR"),
+  "about.competition": D("Competition", "Wettbewerb", "Yarışma"),
+  "about.scroll": D("Scroll", "Scrollen", "Kaydır"),
+  "about.scrollVal": D("↓ Read more", "↓ Mehr lesen", "↓ Devamını Oku"),
 
   // awards
-  "awards.season": D("2025 Season", "Temporada 2025", "2025 Sezonu"),
-  "awards.title1": D("Our", "Nuestros", ""),
-  "awards.title2": D("Awards", "Premios", "Ödüllerimiz"),
+  "awards.season": D("2025 Season", "Saison 2025", "2025 Sezonu"),
+  "awards.title1": D("Our", "Unsere", "Bizim"),
+  "awards.title2": D("Awards", "Auszeichnungen", "Ödüllerimiz"),
   "awards.desc": D(
     "The awards we have earned throughout competitions — a reflection of our success.",
-    "Los premios que hemos ganado a lo largo de las competiciones — un reflejo de nuestro éxito.",
-    "Yarışmalar boyunca kazandığımız ödüller — başarımızın yansıması."
+    "Die Auszeichnungen, die wir über Wettbewerbe hinweg gewonnen haben – ein Spiegel unseres Erfolgs.",
+    "Yarışmalar boyunca kazandığımız ödüller — başarımızın yansıması.",
   ),
 
   // projects
-  "projects.tag": D("What We Build", "Lo Que Construimos", "Neler Yapıyoruz"),
-  "projects.title1": D("Our", "Nuestros", ""),
-  "projects.title2": D("Projects", "Proyectos", "Projelerimiz"),
+  "projects.tag": D("What We Build", "Was wir bauen", "Neler Yapıyoruz"),
+  "projects.title1": D("Our", "Unsere", "Bizim"),
+  "projects.title2": D("Projects", "Projekte", "Projelerimiz"),
   "projects.desc": D(
     "Our social responsibility projects inspiring our community and the future.",
-    "Nuestros proyectos de responsabilidad social inspirando a nuestra comunidad y al futuro.",
-    "Toplumumuza ve geleceğe ilham veren sosyal sorumluluk projelerimiz."
+    "Unsere Sozialprojekte, die unsere Gemeinschaft und die Zukunft inspirieren.",
+    "Toplumumuza ve geleceğe ilham veren sosyal sorumluluk projelerimiz.",
   ),
-  "projects.impact": D("Community Impact", "Impacto Comunitario", "Toplumsal Etki"),
-  "projects.p1.title": D("WOMAN IN STEM", "MUJER EN STEM", "STEM'DE KADIN"),
-  "projects.p1.tag": D("Empowerment", "Empoderamiento", "Güçlendirme"),
+  "projects.impact": D("Community Impact", "Wirkung in der Community", "Toplumsal Etki"),
+  "projects.p1.title": D("WOMAN IN STEM", "FRAUEN IN MINT", "STEM'DE KADIN"),
+  "projects.p1.tag": D("Empowerment", "Stärkung", "Güçlendirme"),
   "projects.p1.desc": D(
     "The Women in STEM project aims to encourage women in science, technology, engineering and mathematics fields and support their advancement. Through training, mentoring, and awareness-raising activities, we work toward equal representation in STEM careers.",
-    "El proyecto Mujeres en STEM busca alentar a las mujeres en los campos de ciencia, tecnología, ingeniería y matemáticas y apoyar su avance. A través de capacitación, mentoría y actividades de concienciación, trabajamos hacia la representación igualitaria en carreras STEM.",
-    "STEM'de Kadın projesi, bilim, teknoloji, mühendislik ve matematik alanlarında kadınları teşvik etmeyi ve ilerlemelerini desteklemeyi amaçlar. Eğitim, mentorluk ve farkındalık etkinlikleriyle STEM kariyerlerinde eşit temsil için çalışıyoruz."
+    "Das Projekt „Women in STEM“ möchte Frauen in Wissenschaft, Technik, Ingenieurwesen und Mathematik ermutigen und ihre Weiterentwicklung unterstützen. Durch Trainings, Mentoring und Awareness-Aktivitäten arbeiten wir an einer gleichberechtigten Repräsentation in MINT-Berufen.",
+    "STEM'de Kadın projesi, bilim, teknoloji, mühendislik ve matematik alanlarında kadınları teşvik etmeyi ve ilerlemelerini desteklemeyi amaçlar. Eğitim, mentorluk ve farkındalık etkinlikleriyle STEM kariyerlerinde eşit temsil için çalışıyoruz.",
   ),
 
   // robots
-  "robots.tag": D("Our Fleet", "Nuestra Flota", "Robotlarımız"),
+  "robots.tag": D("Our Fleet", "Unsere Flotte", "Robotlarımız"),
   "robots.title": D("MANIFEST", "MANIFEST", "MANIFEST"),
   "robots.desc": D(
     "Our 2026 season competition robot, engineered from the ground up by team Infinitech.",
-    "Nuestro robot de competición de la temporada 2026, diseñado desde cero por el equipo Infinitech.",
-    "2026 Sezonu Yarışma Robotumuz — Infinitech Takımı Tarafından Sıfırdan Tasarlanmıştır."
+    "Unser Wettbewerbsroboter der Saison 2026 – von Team Infinitech von Grund auf entwickelt.",
+    "2026 Sezonu Yarışma Robotumuz — Infinitech Takımı Tarafından Sıfırdan Tasarlanmıştır.",
   ),
-  "robots.season": D("Season", "Temporada", "Sezon"),
-  "robots.code": D("Code", "Código", "Kod"),
-  "robots.status": D("Status", "Estado", "Durum"),
-  "robots.active": D("Active", "Activo", "Aktif"),
-  "robots.team": D("Team", "Equipo", "Takım"),
-  "robots.competition": D("Competition", "Competición", "Yarışma"),
-  "robots.origin": D("Origin", "Origen", "Köken"),
-  "robots.marker": D("Built to compete", "Construido para competir", "Yarışmak İçin Tasarlandı"),
-  "projects.p2.title": D("HOPE FOR THE FUTURE", "ESPERANZA PARA EL FUTURO", "GELECEĞE UMUT"),
-  "projects.p2.tag": D("Outreach", "Difusión", "Sosyal Yardım"),
+  "robots.season": D("Season", "Saison", "Sezon"),
+  "robots.code": D("Code", "Code", "Kod"),
+  "robots.status": D("Status", "Status", "Durum"),
+  "robots.active": D("Active", "Aktiv", "Aktif"),
+  "robots.team": D("Team", "Team", "Takım"),
+  "robots.competition": D("Competition", "Wettbewerb", "Yarışma"),
+  "robots.origin": D("Origin", "Herkunft", "Köken"),
+  "robots.marker": D("Built to compete", "Für den Wettkampf gebaut", "Yarışmak İçin Tasarlandı"),
+  "projects.p2.title": D("HOPE FOR THE FUTURE", "HOFFNUNG FÜR DIE ZUKUNFT", "GELECEĞE UMUT"),
+  "projects.p2.tag": D("Outreach", "Outreach", "Sosyal Yardım"),
   "projects.p2.desc": D(
     "In 2023, we organized an event in Istanbul to support children affected by the major earthquake in Türkiye. We delivered STEM presentations and an art workshop to spark curiosity, imagination, and a hopeful future for young minds.",
-    "En 2023, organizamos un evento en Estambul para apoyar a los niños afectados por el gran terremoto en Turquía. Realizamos presentaciones STEM y un taller de arte para despertar la curiosidad, la imaginación y un futuro esperanzador.",
-    "2023'te Türkiye'deki büyük depremden etkilenen çocukları desteklemek için İstanbul'da bir etkinlik düzenledik. Genç zihinlerde merak, hayal gücü ve umut dolu bir gelecek için STEM sunumları ve sanat atölyesi gerçekleştirdik."
+    "Im Jahr 2023 organisierten wir in Istanbul eine Veranstaltung, um Kinder zu unterstützen, die vom schweren Erdbeben in der Türkei betroffen waren. Mit MINT-Präsentationen und einem Kunstworkshop wollten wir Neugier, Fantasie und Hoffnung für die Zukunft wecken.",
+    "2023'te Türkiye'deki büyük depremden etkilenen çocukları desteklemek için İstanbul'da bir etkinlik düzenledik. Genç zihinlerde merak, hayal gücü ve umut dolu bir gelecek için STEM sunumları ve sanat atölyesi gerçekleştirdik.",
   ),
 
   // contact
-  "contact.tag": D("Get In Touch", "Contáctanos", "Bize Ulaşın"),
-  "contact.title1": D("Let's", "Vamos a", ""),
-  "contact.title2": D("Connect", "Conectar", "Bizimle İletişime Geçin"),
+  "contact.tag": D("Get In Touch", "Kontakt aufnehmen", "Bize Ulaşın"),
+  "contact.title1": D("Let's", "Lass uns", "Hadi"),
+  "contact.title2": D("Connect", "Kontakt aufnehmen", "Bizimle İletişime Geçin"),
   "contact.desc": D(
     "Reach us for questions, collaboration offers or sponsorships.",
-    "Contáctanos para preguntas, propuestas de colaboración o patrocinios.",
-    "Sorularınız, İş Birliği Teklifleri Veya Sponsorluk İçin Bize Ulaşın."
+    "Kontaktier uns für Fragen, Kooperationsangebote oder Sponsoring.",
+    "Sorularınız, İş Birliği Teklifleri Veya Sponsorluk İçin Bize Ulaşın.",
   ),
-  "contact.send": D("Send a message", "Envía un mensaje", "Bize Mesaj Gönder"),
-  "contact.headline": D("Get in touch with us", "Ponte en contacto", "Bizimle İletişime Geç"),
-  "contact.name": D("Name", "Nombre", "İsim"),
-  "contact.email": D("Email", "Correo", "E-posta"),
-  "contact.message": D("Message", "Mensaje", "Mesaj"),
-  "contact.placeholder": D("Write your message…", "Escribe tu mensaje…", "Mesajınızı yazın…"),
-  "contact.submit": D("SUBMIT", "ENVIAR", "GÖNDER"),
-  "contact.thanks": D("THANKS ✓", "GRACIAS ✓", "TEŞEKKÜRLER ✓"),
+  "contact.send": D("Send a message", "Nachricht senden", "Bize Mesaj Gönder"),
+  "contact.headline": D("Get in touch with us", "Kontaktiere uns", "Bizimle İletişime Geç"),
+  "contact.name": D("Name", "Name", "İsim"),
+  "contact.email": D("Email", "E-Mail", "E-posta"),
+  "contact.message": D("Message", "Nachricht", "Mesaj"),
+  "contact.placeholder": D("Write your message…", "Schreib deine Nachricht…", "Mesajınızı yazın…"),
+  "contact.submit": D("SUBMIT", "SENDEN", "GÖNDER"),
+  "contact.thanks": D("THANKS ✓", "DANKE ✓", "TEŞEKKÜRLER ✓"),
   "contact.note": D(
     "We'll get back to you as soon as possible.",
-    "Te responderemos lo antes posible.",
-    "En kısa sürede dönüş yapacağız."
+    "Wir melden uns so schnell wie möglich bei dir.",
+    "En kısa sürede dönüş yapacağız.",
   ),
 
   // sponsors
-  "sponsors.tag": D("Powered By", "Impulsado Por", "Destekçilerimiz"),
-  "sponsors.title1": D("Our", "Nuestros", ""),
-  "sponsors.title2": D("Supporters", "Patrocinadores", "Destekçilerimiz"),
+  "sponsors.tag": D("Powered By", "Unterstützt von", "Destekçilerimiz"),
+  "sponsors.title1": D("Our", "Unsere", "Bizim"),
+  "sponsors.title2": D("Supporters", "Unterstützer", "Destekçilerimiz"),
   "sponsors.desc": D(
     "The partners who support us and turn our dreams into reality.",
-    "Los socios que nos apoyan y convierten nuestros sueños en realidad.",
-    "Bizi Destekleyen Ve Hayallerimizi Gerçeğe Dönüştüren Paydaşlarımız."
+    "Partner, die uns unterstützen und unsere Träume Wirklichkeit werden lassen.",
+    "Bizi Destekleyen Ve Hayallerimizi Gerçeğe Dönüştüren Paydaşlarımız.",
   ),
-  "sponsors.become": D("+ Become a Sponsor", "+ Sé un Patrocinador", "+ Sponsor Ol"),
-  "sponsors.join": D("Join the hive", "Únete a la colmena", "Aramıza Katıl"),
+  "sponsors.become": D("+ Become a Sponsor", "+ Sponsor werden", "+ Sponsor Ol"),
+  "sponsors.join": D("Join the hive", "Werde Teil des Schwarms", "Aramıza Katıl"),
 
   // footer
-  "footer.team": D("ISTAF FRC Team · Est. 2024", "Equipo ISTAF FRC · Est. 2024", "ISTAF FRC Takımı · Kuruluş 2024"),
-  "footer.rights": D("All rights reserved.", "Todos los derechos reservados.", "Tüm Hakları Saklıdır."),
+  "footer.team": D(
+    "ISTAF FRC Team · Est. 2024",
+    "ISTAF FRC Team · Gegr. 2024",
+    "ISTAF FRC Takımı · Kuruluş 2024",
+  ),
+  "footer.rights": D("All rights reserved.", "Alle Rechte vorbehalten.", "Tüm Hakları Saklıdır."),
 };
 
 const Ctx = createContext<{ lang: Lang; setLang: (l: Lang) => void; t: (k: string) => string }>({
@@ -147,7 +155,8 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState<Lang>("en");
 
   useEffect(() => {
-    const stored = typeof window !== "undefined" ? (localStorage.getItem("lang") as Lang | null) : null;
+    const stored =
+      typeof window !== "undefined" ? (localStorage.getItem("lang") as Lang | null) : null;
     if (stored && ["en", "tr"].includes(stored)) setLangState(stored);
   }, []);
 
@@ -155,7 +164,9 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     setLangState(l);
     try {
       localStorage.setItem("lang", l);
-    } catch {}
+    } catch {
+      // ignore
+    }
   };
 
   const t = (k: string) => dict[k]?.[lang] ?? k;
