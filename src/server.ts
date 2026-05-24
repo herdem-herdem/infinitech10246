@@ -109,12 +109,19 @@ function jsonResponse(body: unknown, init?: ResponseInit) {
   return new Response(JSON.stringify(body), { ...init, headers });
 }
 
-async function maybeHandleContactApi(request: Request): Promise<Response | null> {
+async function maybeHandleContactApi(request: Request, env: unknown): Promise<Response | null> {
   const { pathname } = new URL(request.url);
   if (pathname !== "/api/contact") return null;
 
   if (request.method === "OPTIONS") {
-    return new Response(null, { status: 204 });
+    return new Response(null, {
+      status: 204,
+      headers: {
+        "access-control-allow-origin": "*",
+        "access-control-allow-methods": "POST, OPTIONS",
+        "access-control-allow-headers": "Content-Type",
+      },
+    });
   }
 
   if (request.method !== "POST") {
@@ -143,7 +150,8 @@ async function maybeHandleContactApi(request: Request): Promise<Response | null>
       },
     ],
     from: {
-      email: "noreply@infinitech-hub.pages.dev",
+      // Prefer a real domain sender for deliverability; must match provider requirements.
+      email: "noreply@infinitech10246.com",
       name: "Infinitech Website",
     },
     subject: `Yeni İletişim Mesajı - ${name}`,
@@ -182,7 +190,14 @@ async function maybeHandleContactApi(request: Request): Promise<Response | null>
 
   const response = await fetch("https://api.mailchannels.net/tx/v1/send", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: (() => {
+      const headers: Record<string, string> = { "Content-Type": "application/json" };
+      const apiKey = (env as any)?.MAILCHANNELS_API_KEY;
+      if (typeof apiKey === "string" && apiKey.trim()) {
+        headers["X-Api-Key"] = apiKey.trim();
+      }
+      return headers;
+    })(),
     body: JSON.stringify(emailPayload),
   });
 
@@ -200,7 +215,7 @@ export default {
       const assetResponse = await maybeServePagesAsset(request, env);
       if (assetResponse) return assetResponse;
 
-      const contactApiResponse = await maybeHandleContactApi(request);
+      const contactApiResponse = await maybeHandleContactApi(request, env);
       if (contactApiResponse) return contactApiResponse;
 
       const handler = await getServerEntry();
