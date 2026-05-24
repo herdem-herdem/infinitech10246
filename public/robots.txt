@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://infinitech10246.com/sitemap.xml
+
+# Infinitech #10246
+# FRC Team 10246 — competitive robotics, STEM education, and engineering inspiration.

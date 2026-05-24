@@ -87,6 +87,8 @@ function looksLikeStaticAssetPath(pathname: string): boolean {
   if (pathname === "/favicon.ico") return true;
   if (pathname === "/robots.txt") return true;
   if (pathname === "/sitemap.xml") return true;
+  if (pathname === "/humans.txt") return true;
+  if (pathname === "/llms.txt") return true;
   return false;
 }
 

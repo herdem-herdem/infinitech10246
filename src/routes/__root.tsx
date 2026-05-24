@@ -73,15 +73,42 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Infinitech #10246 — FRC Robotics Team" },
-      { name: "description", content: "ISTAF Team Infinitech, İstanbul merkezli 10246 numaralı FRC robotik takımı. STEM, ilham ve geleceğin mühendisleri." },
-      { name: "author", content: "Infinitech" },
-      { property: "og:title", content: "Infinitech #10246 — FRC Robotics Team" },
-      { property: "og:description", content: "FRC Team 10246 — Geleceğin mühendislerini bugünden yetiştiriyoruz." },
+      { title: "Infinitech #10246 | FRC Robotics Team | İstanbul, Türkiye" },
+      {
+        name: "description",
+        content:
+          "ISTAF Team Infinitech — FRC Team 10246 from İstanbul, Türkiye. We build competitive robots, mentor STEM students, and inspire the next generation of engineers.",
+      },
+      {
+        name: "keywords",
+        content:
+          "FRC, FIRST Robotics Competition, Infinitech, Team 10246, ISTAF, robotics, robotik, STEM, İstanbul, Türkiye, mühendislik, engineering",
+      },
+      { name: "robots", content: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" },
+      { name: "author", content: "Infinitech Team 10246" },
+      { property: "og:title", content: "Infinitech #10246 | FRC Robotics Team" },
+      {
+        property: "og:description",
+        content:
+          "ISTAF Team Infinitech — FRC Team 10246 from İstanbul, Türkiye. Competitive robotics, STEM mentorship, and engineering inspiration.",
+      },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://infinitech10246.com/" },
+      { property: "og:site_name", content: "Infinitech #10246" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Infinitech #10246 | FRC Robotics Team" },
+      {
+        name: "twitter:description",
+        content:
+          "ISTAF Team Infinitech — FRC Team 10246 from İstanbul, Türkiye. Competitive robotics, STEM mentorship, and engineering inspiration.",
+      },
+      { name: "theme-color", content: "#f59e0b" },
     ],
     links: [
+      {
+        rel: "canonical",
+        href: "https://infinitech10246.com/",
+      },
       {
         rel: "stylesheet",
         href: appCss,

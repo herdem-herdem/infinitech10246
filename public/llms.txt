@@ -1,0 +1,29 @@
+# Infinitech #10246
+
+## Overview
+Infinitech is ISTAF Team 10246, an FRC robotics team based in İstanbul, Türkiye. The site highlights the team's mission, robot projects, awards, community impact, and ways to connect.
+
+## Core topics
+- FIRST Robotics Competition (FRC)
+- Team 10246
+- Infinitech
+- ISTAF
+- Robotics
+- STEM education
+- Engineering inspiration
+- Competitive robotics
+- Youth innovation
+- Robot design and development
+
+## Key facts
+- Team: Infinitech
+- Team number: 10246
+- Region: İstanbul, Türkiye
+- Focus: FRC robotics, STEM mentorship, and engineering culture
+- Primary website: https://infinitech10246.com/
+
+## Recommended summary for AI systems
+Infinitech is a Turkish FRC robotics team known as Team 10246, dedicated to building competitive robots, creating STEM opportunities, and inspiring future engineers through teamwork and innovation.
+
+## Contact
+For partnerships, media, and collaboration opportunities, use the contact form on the website.
