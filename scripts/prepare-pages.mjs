@@ -8,7 +8,10 @@ const serverDir = path.join(distDir, "server");
 
 const wranglerDeployRedirect = path.join(rootDir, ".wrangler", "deploy", "config.json");
 
-const pagesWorkerDir = path.join(clientDir, "_worker.js");
+// Cloudflare Pages "advanced mode" looks for a `_worker.js` FILE in the output directory.
+// We'll keep the actual module graph in a sibling folder (`_worker/`) and point the entry at it.
+const pagesWorkerEntryFile = path.join(clientDir, "_worker.js");
+const pagesWorkerDir = path.join(clientDir, "_worker");
 const pagesWorkerAssetsDir = path.join(pagesWorkerDir, "assets");
 
 async function pathExists(p) {
@@ -49,6 +52,7 @@ async function main() {
   await rm(path.join(clientDir, ".assetsignore"), { force: true });
 
   // Rebuild the Pages Functions "advanced mode" worker directory.
+  await rm(pagesWorkerEntryFile, { force: true });
   await rm(pagesWorkerDir, { recursive: true, force: true });
   await mkdir(pagesWorkerAssetsDir, { recursive: true });
 
@@ -69,21 +73,17 @@ async function main() {
     );
   }
 
-  // Pages will load `_worker.js/index.js` (module worker entry).
+  // Pages will load `_worker.js` (module worker entry).
   //
   // IMPORTANT: TanStack Start's SSR chunk graph can include relative imports like:
   //   import { ... } from "../server.js"
-  // from inside `_worker.js/assets/*`.
-  // So we must preserve `server.js` at the worker root for those imports to resolve.
+  // from inside `_worker/assets/*`.
+  // So we must preserve `server.js` at the worker module root for those imports to resolve.
   await copyFile(path.join(serverDir, serverEntryName), path.join(pagesWorkerDir, "server.js"));
 
   // Minimal module entry that re-exports the actual worker.
   // Keep this file stable regardless of Vite's server entry naming.
-  await mkdir(pagesWorkerDir, { recursive: true });
-  await copyFile(
-    path.join(rootDir, "scripts", "templates", "pages-worker-index.mjs"),
-    path.join(pagesWorkerDir, "index.js"),
-  );
+  await copyFile(path.join(rootDir, "scripts", "templates", "pages-worker-index.mjs"), pagesWorkerEntryFile);
 
   // Copy the entire SSR asset graph.
   // Some builds can emit extensionless modules (e.g. "h3-v2") or nested folders.

@@ -1,7 +1,6 @@
 // Cloudflare Pages Functions (advanced mode) module entrypoint.
 //
-// We keep this as a tiny, stable shim so the "real" worker code can live in
-// `./server.js` (which is also referenced by TanStack Start's server chunk graph).
-export { default } from "./server.js";
-export * from "./server.js";
-
+// This FILE must be named `_worker.js` and placed in the Pages output directory root.
+// We keep the actual module graph in `./_worker/` so it can import its own chunks.
+export { default } from "./_worker/server.js";
+export * from "./_worker/server.js";
