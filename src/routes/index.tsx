@@ -391,7 +391,7 @@ function About() {
             </h2>
             <div className="mt-6 space-y-3 text-white/65 text-sm md:text-base max-w-md leading-relaxed">
               <p>
-                <span className="font-black text-white">ISTAF TEAM INFINITECH</span> {t("about.body1.pre")}{" "}
+                <span className="font-black text-white">TEAM INFINITECH</span> {t("about.body1.pre")}{" "}
                 <span className="font-black" style={{ color: ORANGE }}>#10246</span>
                 {t("about.body1.post")}
               </p>
@@ -1004,7 +1004,7 @@ function Contact() {
                     <MapPin size={12} /> ISTANBUL · TÜRKİYE
                   </div>
                   <div className="text-white font-black text-lg mt-2 leading-tight">
-                    İSTAF FRC TEAM #10246
+                    INFINITECH FRC TEAM #10246
                   </div>
                 </div>
               </div>
@@ -1019,9 +1019,9 @@ function Contact() {
                 icon={<JoinLogo />}
               />
               <SocialCard
-                href="https://instagram.com/team.istaf.infinitech"
+                href="https://instagram.com/team.infinitech"
                 label="Instagram"
-                handle="@team.istaf.infinitech"
+                handle="@team.infinitech"
                 gradient="linear-gradient(135deg, #515BD4, #8134AF, #DD2A7B, #F58529)"
                 icon={<InstagramLogo />}
               />
@@ -1242,7 +1242,6 @@ function FormField({ label, type, name }: { label: string; type: string; name: s
 
 /* ---------------- SPONSORS ---------------- */
 const SPONSORS = [
-  { name: "ISTAF", sub: "" },
   { name: "TAŞÇILAR", sub: "" },
   { name: "POZA", sub: "" },
   { name: "SOYLULAR", sub: "Group" },

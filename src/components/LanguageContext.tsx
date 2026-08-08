@@ -138,9 +138,9 @@ const dict: Record<string, Entry> = {
 
   // footer
   "footer.team": D(
-    "ISTAF FRC Team · Est. 2024",
-    "ISTAF FRC Team · Gegr. 2024",
-    "ISTAF FRC Takımı · Kuruluş 2024",
+    "Infinitech FRC Team · Est. 2024",
+    "Infinitech FRC Team · Gegr. 2024",
+    "Infinitech FRC Takımı · Kuruluş 2024",
   ),
   "footer.rights": D("All rights reserved.", "Alle Rechte vorbehalten.", "Tüm Hakları Saklıdır."),
 };

@@ -1,7 +1,7 @@
 # humanstxt.org
 # TEAM: Infinitech
 # LOCATION: İstanbul, Türkiye
-# ROLE: FRC Team 10246 | ISTAF
+# ROLE: FRC Team 10246
 # PURPOSE: Competitive robotics, STEM education, and engineering inspiration.
 # SITE: https://infinitech10246.com/
 # STACK: React, TypeScript, Tailwind CSS, Vite, Cloudflare Pages
