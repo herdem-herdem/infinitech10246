@@ -41,7 +41,7 @@ const dict: Record<string, Entry> = {
   "about.body2": D(
     "Our vision is to spread FRC, STEM, and positive sciences — inspiring everyone we reach. Although new, we move fast and share what we learn with the world.",
     "Unsere Vision ist es, FRC, MINT und die positiven Wissenschaften zu verbreiten – und alle zu inspirieren, die wir erreichen. Obwohl wir neu sind, bewegen wir uns schnell und teilen unser Wissen mit der Welt.",
-    "Vizyonumuz FRC, STEM ve pozitif bilimleri yaymak — ulaştığımız herkese ilham vermek. Yeni olsak da hızlı ilerliyor ve öğrendiklerimizi dünyayla paylaşıyoruz.",
+    "Vizyonumuz; FRC, STEM ve pozitif bilimleri yaygınlaştırarak bilime ve teknolojiye olan ilgiyi artırmak, ulaştığımız herkese ilham vermek. Infinitech olarak deneyimlerimizi paylaşarak sürekli gelişiyor, üretiyor ve öğrendiklerimizi daha geniş kitlelere aktarıyoruz. Geçmişten aldığımız tecrübeyle geleceğe yön veriyor, birlikte öğrenerek daha ileriye ilerliyoruz.",
   ),
   "about.location": D("Location", "Standort", "Konum"),
   "about.locationVal": D("Istanbul · TR", "Istanbul · TR", "İstanbul · TR"),
