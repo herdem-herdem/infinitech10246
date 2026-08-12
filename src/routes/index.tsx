@@ -221,7 +221,7 @@ function Navbar() {
               onClick={(e) => handleNavClick(e, "contact")}
               className="hidden md:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[11px] font-black uppercase tracking-wider bg-orange-500 text-black hover:bg-orange-400 transition-colors shadow-[0_4px_20px_-4px_rgba(245,165,36,0.6)]"
             >
-              <Sparkles size={12} /> {t("nav.join")}
+               {t("nav.join")}
             </a>
             <button
               onClick={() => setOpen(!open)}
