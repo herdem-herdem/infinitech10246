@@ -400,22 +400,7 @@ function About() {
           </div>
         </div>
 
-        {/* bottom corner data */}
-        <div className="absolute bottom-8 left-8 right-8 z-10 flex items-end justify-between text-white/50 text-[10px] font-mono uppercase tracking-widest">
-          <div>
-            <div className="text-white/30">{t("about.location")}</div>
-            <div className="mt-1 text-white/90">{t("about.locationVal")}</div>
-          </div>
-          <div className="hidden md:block">
-            <div className="text-white/30">{t("about.competition")}</div>
-            <div className="mt-1 text-white/90">FRC · FIRST Robotics</div>
-          </div>
-          <div className="text-right">
-            <div className="text-white/30">{t("about.scroll")}</div>
-            <div className="mt-1 text-white/90">{t("about.scrollVal")}</div>
-          </div>
-        </div>
-      </div>
+
     </section>
   );
 }
