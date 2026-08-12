@@ -29,6 +29,8 @@ import award3 from "@/assets/award-3.png";
 import award4 from "@/assets/award-4.png";
 import award5 from "@/assets/award-5.png";
 import award6 from "@/assets/award-6.jpg";
+import trabzonWinner from "@/assets/trabzon-winner.jpeg";
+import trabzonEI from "@/assets/trabzon-EI.jpeg";
 import projectWomenStem from "@/assets/project-women-stem.jpg";
 import projectHopeFuture from "@/assets/project-hope-future.jpg";
 import manifestRobot from "@/assets/manifest-robot.png";
@@ -436,6 +438,8 @@ const AWARDS = [
   { event: "Ümraniye Off-Season", title: "TEAM SPIRIT", img: award4 },
   { event: "Yıldız Off-Season", title: "RISING ALL-STAR", img: award5 },
   { event: "İBB Off-Season", title: "JUDGES AWARD", img: award6 },
+  { event: "Trabzon Off-Season", title: "WINNER", img: trabzonWinner },
+  { event: "Trabzon Off-Season", title: "ENGINEERING INSPIRATION", img: trabzonEI }
 ];
 
 function Awards() {
