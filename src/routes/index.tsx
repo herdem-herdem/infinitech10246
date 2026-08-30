@@ -53,9 +53,8 @@ const NAV = [
   { id: "contact", key: "contact" },
 ];
 
-const LANGS: { code: "en" | "de" | "tr"; label: string; flag: string }[] = [
+const LANGS: { code: "en" | "tr"; label: string; flag: string }[] = [
   { code: "en", label: "EN", flag: "🇬🇧" },
-  { code: "de", label: "DE", flag: "🇩🇪" },
   { code: "tr", label: "TR", flag: "🇹🇷" },
 ];
 
@@ -95,9 +94,8 @@ const HEX_BG = {
 /* ---------------- NAVBAR ---------------- */
 function LanguageSwitcher() {
   const { lang, setLang } = useLang();
-  const order: { code: "en" | "de" | "tr"; label: string }[] = [
+  const order: { code: "en" | "tr"; label: string }[] = [
     { code: "en", label: "EN" },
-    { code: "de", label: "DE" },
     { code: "tr", label: "TR" },
   ];
   return (
