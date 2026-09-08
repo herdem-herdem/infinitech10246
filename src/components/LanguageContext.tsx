@@ -89,6 +89,12 @@ const dict: Record<string, Entry> = {
   "robots.code": D("Code", "Code", "Kod"),
   "robots.status": D("Status", "Status", "Durum"),
   "robots.active": D("Active", "Aktiv", "Aktif"),
+  "robots.inactive": D("Inactive", "Inaktiv", "Pasif"),
+  "robots.balli.desc": D(
+    "Our 2025 season competition robot, designed by team Infinitech.",
+    "Unser Wettbewerbsroboter der Saison 2025 – von Team Infinitech entwickelt.",
+    "2025 Sezonu Yarışma Robotumuz — Infinitech Takımı Tarafından Tasarlanmıştır.",
+  ),
   "robots.team": D("Team", "Team", "Takım"),
   "robots.competition": D("Competition", "Wettbewerb", "Yarışma"),
   "robots.origin": D("Origin", "Herkunft", "Köken"),
