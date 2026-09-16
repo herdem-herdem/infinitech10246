@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { motion, useScroll, useTransform, useSpring } from "motion/react";
+import { motion, useScroll, useTransform, useSpring, AnimatePresence } from "motion/react";
 import { useState, useEffect, useRef } from "react";
 import {
   Trophy,
@@ -29,9 +29,12 @@ import award3 from "@/assets/award-3.png";
 import award4 from "@/assets/award-4.png";
 import award5 from "@/assets/award-5.png";
 import award6 from "@/assets/award-6.jpg";
+import trabzonWinner from "@/assets/trabzon-winner.jpeg";
+import trabzonEI from "@/assets/trabzon-EI.jpeg";
 import projectWomenStem from "@/assets/project-women-stem.jpg";
 import projectHopeFuture from "@/assets/project-hope-future.jpg";
 import manifestRobot from "@/assets/manifest-robot.png";
+import balliRobot from "@/assets/balli-robot.png";
 import { Globe } from "@/components/Globe";
 import { useLang } from "@/components/LanguageContext";
 
@@ -51,9 +54,8 @@ const NAV = [
   { id: "contact", key: "contact" },
 ];
 
-const LANGS: { code: "en" | "de" | "tr"; label: string; flag: string }[] = [
+const LANGS: { code: "en" | "tr"; label: string; flag: string }[] = [
   { code: "en", label: "EN", flag: "🇬🇧" },
-  { code: "de", label: "DE", flag: "🇩🇪" },
   { code: "tr", label: "TR", flag: "🇹🇷" },
 ];
 
@@ -93,9 +95,8 @@ const HEX_BG = {
 /* ---------------- NAVBAR ---------------- */
 function LanguageSwitcher() {
   const { lang, setLang } = useLang();
-  const order: { code: "en" | "de" | "tr"; label: string }[] = [
+  const order: { code: "en" | "tr"; label: string }[] = [
     { code: "en", label: "EN" },
-    { code: "de", label: "DE" },
     { code: "tr", label: "TR" },
   ];
   return (
@@ -221,7 +222,7 @@ function Navbar() {
               onClick={(e) => handleNavClick(e, "contact")}
               className="hidden md:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[11px] font-black uppercase tracking-wider bg-orange-500 text-black hover:bg-orange-400 transition-colors shadow-[0_4px_20px_-4px_rgba(245,165,36,0.6)]"
             >
-              <Sparkles size={12} /> {t("nav.join")}
+               {t("nav.join")}
             </a>
             <button
               onClick={() => setOpen(!open)}
@@ -391,7 +392,7 @@ function About() {
             </h2>
             <div className="mt-6 space-y-3 text-white/65 text-sm md:text-base max-w-md leading-relaxed">
               <p>
-                <span className="font-black text-white">ISTAF TEAM INFINITECH</span> {t("about.body1.pre")}{" "}
+                <span className="font-black text-white">TEAM INFINITECH</span> {t("about.body1.pre")}{" "}
                 <span className="font-black" style={{ color: ORANGE }}>#10246</span>
                 {t("about.body1.post")}
               </p>
@@ -400,22 +401,7 @@ function About() {
           </div>
         </div>
 
-        {/* bottom corner data */}
-        <div className="absolute bottom-8 left-8 right-8 z-10 flex items-end justify-between text-white/50 text-[10px] font-mono uppercase tracking-widest">
-          <div>
-            <div className="text-white/30">{t("about.location")}</div>
-            <div className="mt-1 text-white/90">{t("about.locationVal")}</div>
-          </div>
-          <div className="hidden md:block">
-            <div className="text-white/30">{t("about.competition")}</div>
-            <div className="mt-1 text-white/90">FRC · FIRST Robotics</div>
-          </div>
-          <div className="text-right">
-            <div className="text-white/30">{t("about.scroll")}</div>
-            <div className="mt-1 text-white/90">{t("about.scrollVal")}</div>
-          </div>
-        </div>
-      </div>
+
     </section>
   );
 }
@@ -451,6 +437,8 @@ const AWARDS = [
   { event: "Ümraniye Off-Season", title: "TEAM SPIRIT", img: award4 },
   { event: "Yıldız Off-Season", title: "RISING ALL-STAR", img: award5 },
   { event: "İBB Off-Season", title: "JUDGES AWARD", img: award6 },
+  { event: "Trabzon Off-Season", title: "WINNER", img: trabzonWinner },
+  { event: "Trabzon Off-Season", title: "ENGINEERING INSPIRATION", img: trabzonEI }
 ];
 
 function Awards() {
@@ -742,8 +730,42 @@ function Projects() {
 
 
 /* ---------------- ROBOTS ---------------- */
+const ROBOTS = [
+  {
+    id: "manifest",
+    name: "MANIFEST",
+    image: manifestRobot,
+    descKey: "robots.desc" as const,
+    season: "2026",
+    code: "#10246",
+    status: "active" as const,
+    team: "INFINITECH",
+    competition: "FRC 2026",
+    origin: "Istanbul · TR",
+  },
+  {
+    id: "balli",
+    name: "BALLI",
+    image: balliRobot,
+    descKey: "robots.balli.desc" as const,
+    season: "2025",
+    code: "#10246",
+    status: "inactive" as const,
+    team: "INFINITECH",
+    competition: "FRC 2025",
+    origin: "İstanbul - TR",
+  },
+];
+
 function Robots() {
   const { t } = useLang();
+  const [current, setCurrent] = useState(0);
+  const robot = ROBOTS[current];
+
+  const goPrev = () =>
+    setCurrent((i) => (i - 1 + ROBOTS.length) % ROBOTS.length);
+  const goNext = () => setCurrent((i) => (i + 1) % ROBOTS.length);
+
   return (
     <section
       id="robots"
@@ -782,64 +804,112 @@ function Robots() {
           >
             <Rocket size={12} /> {t("robots.tag")}
           </motion.div>
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7 }}
-            className="text-5xl md:text-7xl font-black text-white tracking-tight"
-            style={{ fontFamily: "'Impact', sans-serif" }}
-          >
-            {t("robots.title")}
-          </motion.h2>
-          <p className="mt-4 text-white/60 max-w-2xl mx-auto">{t("robots.desc")}</p>
+          <AnimatePresence mode="wait">
+            <motion.h2
+              key={robot.id + "-title"}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.35 }}
+              className="text-5xl md:text-7xl font-black text-white tracking-tight"
+              style={{ fontFamily: "'Impact', sans-serif" }}
+            >
+              {robot.name}
+            </motion.h2>
+          </AnimatePresence>
+          <AnimatePresence mode="wait">
+            <motion.p
+              key={robot.id + "-desc"}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.35 }}
+              className="mt-4 text-white/60 max-w-2xl mx-auto"
+            >
+              {t(robot.descKey)}
+            </motion.p>
+          </AnimatePresence>
         </div>
 
         {/* Robot showcase */}
         <div className="relative grid md:grid-cols-12 gap-8 items-center">
           {/* Left meta */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7 }}
-            className="md:col-span-3 space-y-6 order-2 md:order-1"
-          >
-            <div className="border-l-2 border-orange-400 pl-4">
-              <div className="text-[10px] uppercase tracking-[0.3em] text-white/40 mb-1">
-                {t("robots.season")}
-              </div>
-              <div
-                className="text-4xl font-black text-white"
-                style={{ fontFamily: "'Impact', sans-serif" }}
+          <div className="md:col-span-3 space-y-6 order-2 md:order-1">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={robot.id + "-left"}
+                initial={{ opacity: 0, x: -16 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 16 }}
+                transition={{ duration: 0.35 }}
+                className="space-y-6"
               >
-                2026
-              </div>
-            </div>
-            <div className="border-l-2 border-orange-400/60 pl-4">
-              <div className="text-[10px] uppercase tracking-[0.3em] text-white/40 mb-1">
-                {t("robots.code")}
-              </div>
-              <div className="text-lg font-mono text-orange-300">#10246 / R-01</div>
-            </div>
-            <div className="border-l-2 border-orange-400/40 pl-4">
-              <div className="text-[10px] uppercase tracking-[0.3em] text-white/40 mb-1">
-                {t("robots.status")}
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-orange-400" />
-                </span>
-                <span className="text-sm font-semibold text-white">
-                  {t("robots.active")}
-                </span>
-              </div>
-            </div>
-          </motion.div>
+                <div className="border-l-2 border-orange-400 pl-4">
+                  <div className="text-[10px] uppercase tracking-[0.3em] text-white/40 mb-1">
+                    {t("robots.season")}
+                  </div>
+                  <div
+                    className="text-4xl font-black text-white"
+                    style={{ fontFamily: "'Impact', sans-serif" }}
+                  >
+                    {robot.season}
+                  </div>
+                </div>
+                <div className="border-l-2 border-orange-400/60 pl-4">
+                  <div className="text-[10px] uppercase tracking-[0.3em] text-white/40 mb-1">
+                    {t("robots.code")}
+                  </div>
+                  <div className="text-lg font-mono text-orange-300">{robot.code}</div>
+                </div>
+                <div className="border-l-2 border-orange-400/40 pl-4">
+                  <div className="text-[10px] uppercase tracking-[0.3em] text-white/40 mb-1">
+                    {t("robots.status")}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {robot.status === "active" ? (
+                      <>
+                        <span className="relative flex h-2 w-2">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75" />
+                          <span className="relative inline-flex rounded-full h-2 w-2 bg-orange-400" />
+                        </span>
+                        <span className="text-sm font-semibold text-white">
+                          {t("robots.active")}
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-white/30" />
+                        <span className="text-sm font-semibold text-white/60">
+                          {t("robots.inactive")}
+                        </span>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
 
           {/* Centered robot image */}
           <div className="md:col-span-6 order-1 md:order-2 relative flex items-center justify-center">
+            {/* Navigation arrows */}
+            <button
+              type="button"
+              onClick={goPrev}
+              aria-label="Previous robot"
+              className="absolute left-0 md:-left-2 top-1/2 -translate-y-1/2 z-30 p-1.5 text-white/35 hover:text-orange-400 transition-colors duration-200"
+            >
+              <ChevronLeft size={32} strokeWidth={1.5} />
+            </button>
+            <button
+              type="button"
+              onClick={goNext}
+              aria-label="Next robot"
+              className="absolute right-0 md:-right-2 top-1/2 -translate-y-1/2 z-30 p-1.5 text-white/35 hover:text-orange-400 transition-colors duration-200"
+            >
+              <ChevronRight size={32} strokeWidth={1.5} />
+            </button>
+
             {/* Rotating orbital ring */}
             <motion.div
               animate={{ rotate: 360 }}
@@ -862,73 +932,84 @@ function Robots() {
               style={{ background: `radial-gradient(circle, ${ORANGE}66 0%, transparent 70%)` }}
             />
 
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-              className="relative z-10"
-            >
-              <motion.img
-                src={manifestRobot}
-                alt="MANIFEST — 2026 Robot"
-                className="relative w-full max-w-[520px] drop-shadow-[0_30px_50px_rgba(245,165,36,0.35)]"
-                animate={{ y: [0, -14, 0] }}
-                transition={{ duration: 5, ease: "easeInOut", repeat: Infinity }}
-              />
-            </motion.div>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={robot.id + "-image"}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.35 }}
+                className="relative z-10"
+              >
+                <motion.img
+                  src={robot.image}
+                  alt={`${robot.name} — ${robot.season} Robot`}
+                  className="relative w-full max-w-[520px] drop-shadow-[0_30px_50px_rgba(245,165,36,0.35)]"
+                  animate={{ y: [0, -14, 0] }}
+                  transition={{ duration: 5, ease: "easeInOut", repeat: Infinity }}
+                />
+              </motion.div>
+            </AnimatePresence>
 
             {/* Name plate */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              className="absolute -bottom-2 left-1/2 -translate-x-1/2 z-20"
-            >
-              <div className="px-6 py-2 rounded-full border border-orange-400/50 bg-black/70 backdrop-blur-md">
-                <span
-                  className="text-2xl md:text-3xl font-black text-white tracking-[0.3em]"
-                  style={{ fontFamily: "'Impact', sans-serif" }}
-                >
-                  MANIFEST
-                </span>
-              </div>
-            </motion.div>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={robot.id + "-plate"}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: 0.35 }}
+                className="absolute -bottom-2 left-1/2 -translate-x-1/2 z-20"
+              >
+                <div className="px-6 py-2 rounded-full border border-orange-400/50 bg-black/70 backdrop-blur-md">
+                  <span
+                    className="text-2xl md:text-3xl font-black text-white tracking-[0.3em]"
+                    style={{ fontFamily: "'Impact', sans-serif" }}
+                  >
+                    {robot.name}
+                  </span>
+                </div>
+              </motion.div>
+            </AnimatePresence>
           </div>
 
           {/* Right meta */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7 }}
-            className="md:col-span-3 space-y-6 order-3"
-          >
-            <div className="border-r-2 border-orange-400 pr-4 text-right">
-              <div className="text-[10px] uppercase tracking-[0.3em] text-white/40 mb-1">
-                {t("robots.team")}
-              </div>
-              <div
-                className="text-lg font-black text-white"
-                style={{ fontFamily: "'Impact', sans-serif" }}
+          <div className="md:col-span-3 space-y-6 order-3">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={robot.id + "-right"}
+                initial={{ opacity: 0, x: 16 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -16 }}
+                transition={{ duration: 0.35 }}
+                className="space-y-6"
               >
-                INFINITECH
-              </div>
-            </div>
-            <div className="border-r-2 border-orange-400/60 pr-4 text-right">
-              <div className="text-[10px] uppercase tracking-[0.3em] text-white/40 mb-1">
-                {t("robots.competition")}
-              </div>
-              <div className="text-sm text-white/80">FRC 2026</div>
-            </div>
-            <div className="border-r-2 border-orange-400/40 pr-4 text-right">
-              <div className="text-[10px] uppercase tracking-[0.3em] text-white/40 mb-1">
-                {t("robots.origin")}
-              </div>
-              <div className="text-sm text-white/80">Istanbul · TR</div>
-            </div>
-          </motion.div>
+                <div className="border-r-2 border-orange-400 pr-4 text-right">
+                  <div className="text-[10px] uppercase tracking-[0.3em] text-white/40 mb-1">
+                    {t("robots.team")}
+                  </div>
+                  <div
+                    className="text-lg font-black text-white"
+                    style={{ fontFamily: "'Impact', sans-serif" }}
+                  >
+                    {robot.team}
+                  </div>
+                </div>
+                <div className="border-r-2 border-orange-400/60 pr-4 text-right">
+                  <div className="text-[10px] uppercase tracking-[0.3em] text-white/40 mb-1">
+                    {t("robots.competition")}
+                  </div>
+                  <div className="text-sm text-white/80">{robot.competition}</div>
+                </div>
+                <div className="border-r-2 border-orange-400/40 pr-4 text-right">
+                  <div className="text-[10px] uppercase tracking-[0.3em] text-white/40 mb-1">
+                    {t("robots.origin")}
+                  </div>
+                  <div className="text-sm text-white/80">{robot.origin}</div>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
         </div>
 
         {/* Bottom marker */}
@@ -1004,7 +1085,7 @@ function Contact() {
                     <MapPin size={12} /> ISTANBUL · TÜRKİYE
                   </div>
                   <div className="text-white font-black text-lg mt-2 leading-tight">
-                    İSTAF FRC TEAM #10246
+                    INFINITECH FRC TEAM #10246
                   </div>
                 </div>
               </div>
@@ -1019,9 +1100,9 @@ function Contact() {
                 icon={<JoinLogo />}
               />
               <SocialCard
-                href="https://instagram.com/team.istaf.infinitech"
+                href="https://instagram.com/team.infinitech"
                 label="Instagram"
-                handle="@team.istaf.infinitech"
+                handle="@team.infinitech"
                 gradient="linear-gradient(135deg, #515BD4, #8134AF, #DD2A7B, #F58529)"
                 icon={<InstagramLogo />}
               />
@@ -1242,7 +1323,6 @@ function FormField({ label, type, name }: { label: string; type: string; name: s
 
 /* ---------------- SPONSORS ---------------- */
 const SPONSORS = [
-  { name: "ISTAF", sub: "" },
   { name: "TAŞÇILAR", sub: "" },
   { name: "POZA", sub: "" },
   { name: "SOYLULAR", sub: "Group" },
